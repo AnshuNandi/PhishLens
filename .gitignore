@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.pyc
+
+# Virtual Environment
+PhishLens/
+venv/
+env/
+ENV/
+
+# Environment variables
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+logs/
+*.log
+flask_output.log
+flask_startup.log
+
+# Model artifacts
+artifacts/
+prediction_artifacts/
+predictions/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# Flask
+instance/
+.webassets-cache
+
+# OS
+.DS_Store
+Thumbs.db
