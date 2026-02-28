@@ -1,14 +1,13 @@
 services:
   - type: web
     name: phishlens
-    runtime: python
+    runtime: docker
     plan: free
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn --workers 2 --threads 2 --worker-class gthread --bind 0.0.0.0:8080 app:app
+    dockerfilePath: ./Dockerfile
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.8
       - key: FLASK_ENV
         value: production
+      - key: MONGO_DB_URL
+        sync: false
     branches:
       - branch: main
