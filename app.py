@@ -10,6 +10,10 @@ from src.pipeline.predict_pipeline import PredictionPipeline
 # Load environment variables
 load_dotenv()
 
+# Validate required environment variables
+required_env_vars = ['MONGO_DB_URL']
+missing_vars = [var for var in required_env_vars if not os.getenv(var)]
+
 app = Flask(__name__)
 
 @app.route("/")
@@ -18,11 +22,22 @@ def home():
 
 @app.route("/health")
 def health():
+    if missing_vars:
+        return jsonify({
+            "status": "unhealthy",
+            "message": f"Missing environment variables: {', '.join(missing_vars)}"
+        }), 503
     return jsonify({"status": "healthy"}), 200
 
 @app.route("/train", methods=['POST', 'GET'])
 def train_route():
     try:
+        if missing_vars:
+            return jsonify({
+                "status": "error",
+                "message": f"Cannot start training: Missing environment variables: {', '.join(missing_vars)}"
+            }), 503
+            
         lg.info("=== TRAINING STARTED ===")
         train_pipeline = TrainingPipeline()
         lg.info("Training pipeline created")
@@ -40,6 +55,12 @@ def train_route():
 @app.route('/predict', methods=['POST', 'GET'])
 def predict():
     try:
+        if missing_vars:
+            return jsonify({
+                "status": "error",
+                "message": f"Cannot make predictions: Missing environment variables: {', '.join(missing_vars)}"
+            }), 503
+            
         if request.method == 'POST':
             prediction_pipeline = PredictionPipeline(request)
             prediction_file_detail = prediction_pipeline.run_pipeline()
